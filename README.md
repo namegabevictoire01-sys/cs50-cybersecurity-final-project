@@ -26,3 +26,7 @@ To protect open-source ecosystems from similar supply chain compromises, several
 - **CI/CD Security:** Automated auditing tools must verify that release tarballs match the source code in official Git repositories.
 - **System Isolation:** Systems should limit unnecessary linking between system management daemons like systemd and exposed networking services like OpenSSH.
 
+## Video Overview
+* **Video URL**: https://youtu.be/bwTcHBwW0M8?si=nKa0Df02IKvgIjPJ
+
+
