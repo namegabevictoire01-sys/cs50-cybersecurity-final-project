@@ -5,7 +5,7 @@
 - **edX Username:** namegabevictoire01
 - **GitHub Username:** namegabevictoire01-sys
 - **Location:** Bukavu, Democratic Republic of the Congo
-- **Date:** August 10, 2026
+- **Date:** August 27, 2026
 
 ## Project Overview
 This project provides a comprehensive cybersecurity analysis of the critical supply chain attack identified under CVE-2024-3094, commonly known as the XZ Utils backdoor incident. Discovered in late March 2024, this backdoor targeted the `liblzma` library, a core compression component widely deployed across major Linux distributions.
@@ -27,6 +27,6 @@ To protect open-source ecosystems from similar supply chain compromises, several
 - **System Isolation:** Systems should limit unnecessary linking between system management daemons like systemd and exposed networking services like OpenSSH.
 
 ## Video Overview
-* **Video URL**: https://youtu.be/bwTcHBwW0M8?si=nKa0Df02IKvgIjPJ
+* **Video URL**: https://youtu.be/1CuHFObpR9U?si=kwJ2NINzbpPVAdb5
 
 
