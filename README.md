@@ -1,32 +1,55 @@
-# Final Project: Technical Analysis of CVE-2024-3094 (XZ Utils Backdoor)
+ # Technical Analysis of CVE-2024-3094: XZ Utils Supply Chain Backdoor
 
-## Author Information
-- **Name:** Namegabe Mulokwa Victoire
-- **edX Username:** namegabevictoire01
-- **GitHub Username:** namegabevictoire01-sys
-- **Location:** Bukavu, Democratic Republic of the Congo
-- **Date:** August 27, 2026
+#### Video Demo: https://youtu.be/3xBtabSkusE?si=ChN3nBgybK4nqNLz
 
-## Project Overview
-This project provides a comprehensive cybersecurity analysis of the critical supply chain attack identified under CVE-2024-3094, commonly known as the XZ Utils backdoor incident. Discovered in late March 2024, this backdoor targeted the `liblzma` library, a core compression component widely deployed across major Linux distributions.
+#### Description:
+An in-depth technical and architectural breakdown of **CVE-2024-3094** (CVSS 10.0 Critical), the historic open-source supply chain backdoor embedded into `xz-utils` / `liblzma` (versions 5.6.0 and 5.6.1) discovered in March 2024. 
 
-## Background and Chronology
-The attack was executed through a multi-year social engineering campaign. Starting around 2022, an account under the name 'Jia Tan' contributed legitimate patches to the XZ Utils repository to build trust within the developer community. Over time, the threat actor gained maintainer permissions and pushed hidden malicious files. In March 2024, Microsoft engineer Andres Freund identified a 500-millisecond delay during SSH authentication on Debian testing machines. Further investigation revealed that release tarballs for versions 5.6.0 and 5.6.1 contained modified build scripts not present in the public Git repository.
+This presentation was developed as the Final Project for **CS50’s Introduction to Cybersecurity** by Harvard University / edX.
 
-## Technical Mechanism
-The injection mechanism was highly sophisticated and heavily obfuscated:
-1. **Extraction:** During the build process, hidden M4 macros extracted an encrypted payload contained within binary test files.
-2. **Hooking:** The compromised `liblzma` library hooked into OpenSSH (`sshd`) via systemd notification structures.
-3. **Execution:** The injected code intercepted RSA signature verification routines during SSH authentication.
-4. **Impact:** Any remote client sending a specifically crafted payload signed with a designated private RSA key could achieve arbitrary command execution (RCE) with full root privileges, bypassing normal authentication mechanisms completely.
+---
 
-## Recommendations and Mitigations
-To protect open-source ecosystems from similar supply chain compromises, several measures must be implemented:
-- **Governance:** Critical utility projects must avoid single-maintainer dependencies by establishing multi-maintainer governance structures.
-- **CI/CD Security:** Automated auditing tools must verify that release tarballs match the source code in official Git repositories.
-- **System Isolation:** Systems should limit unnecessary linking between system management daemons like systemd and exposed networking services like OpenSSH.
+### 👤 Project Metadata
+* **Student Name:** Namegabe Mulokwa Victoire
+* **edX Username:** namegabevictoire01
+* **GitHub Username:** namegabevictoire01-sys
+* **Date:** September 15, 2026
+* **Course:** CS50 Cybersecurity (Final Project)
 
-## Video Overview
-* **Video URL**: https://youtu.be/1CuHFObpR9U?si=kwJ2NINzbpPVAdb5
+---
 
+### 📌 Executive Summary
+In March 2024, a critical supply chain attack was discovered inside `xz-utils`, a fundamental compression utility utilized across major Linux distributions (Debian, Fedora, Ubuntu, Arch, RHEL). Assigned the maximum vulnerability score of **CVSS 10.0**, the backdoor targeted `liblzma.so` during compilation to hijack OpenSSH (`sshd`) processes, allowing unauthorized remote code execution (RCE) with full `root` privileges.
 
+This project examines the complete lifecycle of the vulnerability across five key dimensions:
+1. **Scope & Impact:** Global footprint of `liblzma` and core system security concepts.
+2. **Social Engineering:** The 2-year multi-persona infiltration campaign by threat actor 'Jia Tan'.
+3. **Technical Mechanics:** Obfuscated test files, build-time `m4` execution, and GNU IFUNC symbol hijacking.
+4. **Detection & Payload Execution:** Cryptographic signature verification (ED448) and Andres Freund’s anomaly discovery.
+5. **Systemic Mitigation:** Multi-maintainer governance, reproducible builds, and privilege decoupling.
+
+---
+
+### 🛠️ Key Technical Findings
+
+* **Social Engineering / Human Infiltration:** The threat actor established trust over 24 months through genuine contributions before leveraging coordinated sockpuppet accounts to pressure the sole maintainer, eventually gaining administrative commit and release-signing permissions.
+* **Build-Time Obfuscation:** Malicious binary objects were hidden inside disguised test archives (`bad-3-corrupt_lzma2.xz`). An injected `build-to-host.m4` macro verified environment conditions (x86_64 Linux target packaging) before extracting and linking the payload during binary generation.
+* **OpenSSH Interception via GNU IFUNC:** On systemd-enabled Linux distributions, systemd links OpenSSH with `liblzma`. The backdoor utilized GNU Indirect Functions (IFUNC) to hook into memory during dynamic symbol resolving, replacing `RSA_public_decrypt`.
+* **Covert Remote Execution:** The hooked function evaluated incoming SSH payloads against a hardcoded ED448 key. Valid signatures triggered instant root execution without leaving traces in system logs (`syslog`), while non-matching attempts passed through seamlessly to standard authentication.
+
+---
+
+### 📂 Repository & Project Structure
+
+```text
+.
+├── presentation_slides/     # High-resolution 16:9 presentation slides (PNG)
+│   ├── slide1_title.png
+│   ├── slide2_social_engineering.png
+│   ├── slide3_technical_details.png
+│   ├── slide4_discovery.png
+│   └── slide5_mitigation.png
+├── audio_transcripts/      # AI Voiceover transcripts and timing scripts
+│   └── narration_script.txt
+├── README.md                # Project documentation and summary
+└── project_details.txt      # Course submission metadata
